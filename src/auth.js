@@ -41,7 +41,7 @@ export class GameGlueAuth {
     return token;
   }
   getUserId() {
-    const decoded = jwt_decode(access_token);
+    const decoded = jwt_decode(this.getAccessToken());
     return decoded.sub;
   }
   setRefreshToken(token) {
@@ -64,7 +64,7 @@ export class GameGlueAuth {
         console.error(response.error);
         return;
       }
-      window.history.replaceState({}, document.title, "/");
+      window.history.pushState("", document.title, window.location.pathname + window.location.search);
       this.setAccessToken(response.access_token);
       this.setRefreshToken(response.refresh_token);
     } catch (e) {

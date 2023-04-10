@@ -1,13 +1,22 @@
 {
-  "name": "GameGlue SDK",
-  "version": "0.0.1",
+  "name": "gamegluejs",
+  "version": "0.0.10",
   "description": "Javascript SDK for the GameGlue developer platform.",
-  "main": "dist/main.js",
+  "main": "dist/gs.sdk.js",
   "scripts": {
+    "build": "webpack ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GameGlue/GameGlueJS.git"
+  },
+  "author": "GameGlue",
+  "license": "MIT",
+  "homepage": "https://gameglue.gg",
+  "bugs": {
+    "url":"https://github.com/GameGlue/GameGlueJS/issues"
+  },
   "dependencies": {
     "event-emitter": "^0.3.5",
     "jwt-decode": "^3.1.2",

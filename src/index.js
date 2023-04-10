@@ -10,7 +10,6 @@ class GameGlue extends GameGlueAuth  {
   constructor(cfg) {
     super(cfg);
     this._socket = false;
-    this._eventListeners = [];
   }
   
   async auth() {
@@ -18,6 +17,7 @@ class GameGlue extends GameGlueAuth  {
     if (await this.isAuthenticated()) {
       await this.initialize();
     }
+    return this.getUserId();
   }
   
   async initialize() {
@@ -29,6 +29,7 @@ class GameGlue extends GameGlueAuth  {
           token
         }
       });
+      // TODO: Update this code to use the new refresh logic. Example in gg-client repo
       this._socket.on('connect', () => {
         resolve();
       });
