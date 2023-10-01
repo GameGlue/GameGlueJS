@@ -18,11 +18,11 @@ First, [click here](https://developer.gameglue.gg) to sign up for a GameGlue acc
 ### Install using one of the following options
 ##### NPM
 ```shell
-npm i gameglue
+npm i gamegluejs
 ```
 ##### Yarn
 ```shell
-yarn add gameglue
+yarn add gamegluejs
 ```
 ##### Script tag
 ```html
