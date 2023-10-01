@@ -3,7 +3,8 @@ import { io } from "socket.io-client";
 import { Listener} from "./listener";
 
 const GAME_IDS = {
-  'msfs': true
+  'msfs': true,
+  'csgo': true
 };
 
 class GameGlue extends GameGlueAuth  {

@@ -8,8 +8,8 @@ export class GameGlueAuth {
     this._oidcSettings = {
       authority: "https://kc.gameglue.gg/realms/GameGlue",
       client_id: cfg.clientId,
-      redirect_uri: cfg.redirect_uri || window.location.href,
-      post_logout_redirect_uri: window.location.href,
+      redirect_uri: removeTrailingSlashes(cfg.redirect_uri || window.location.href),
+      post_logout_redirect_uri: removeTrailingSlashes(window.location.href),
       response_type: "code",
       scope: `openid ${(cfg.scopes||[]).join(' ')}`,
       response_mode: "fragment",
@@ -54,22 +54,14 @@ export class GameGlueAuth {
     return (location.hash.includes("state=") && (location.hash.includes("code=") || location.hash.includes("error=")));
   }
   async handleRedirectResponse() {
-    if (!this._shouldHandleRedirectResponse()) {
+    let response = await this._oidcClient.processSigninResponse(window.location.href);
+    if (response.error || !response.access_token) {
+      console.error(response.error);
       return;
     }
-    
-    try {
-      let response = await this._oidcClient.processSigninResponse(window.location.href);
-      if (response.error || !response.access_token) {
-        console.error(response.error);
-        return;
-      }
-      window.history.pushState("", document.title, window.location.pathname + window.location.search);
-      this.setAccessToken(response.access_token);
-      this.setRefreshToken(response.refresh_token);
-    } catch (e) {
-      console.error('Error: ', e);
-    }
+    window.history.pushState("", document.title, window.location.pathname + window.location.search);
+    this.setAccessToken(response.access_token);
+    this.setRefreshToken(response.refresh_token);
   }
   onTokenRefreshed(callback) {
     this._refreshCallback = callback;
@@ -137,11 +129,20 @@ export class GameGlueAuth {
     });
   }
   async authenticate() {
-    await this.handleRedirectResponse();
-    let isAuthenticated = await this.isAuthenticated();
+    if (this._shouldHandleRedirectResponse()) {
+      await this.handleRedirectResponse();
+    }
     
+    let isAuthenticated = await this.isAuthenticated();
     if (!isAuthenticated) {
       await this._triggerAuthRedirect();
     }
   }
+}
+
+function removeTrailingSlashes(url) {
+  if (url.endsWith('/')) {
+    return url.replace(/\/+$/, '');
+  }
+  return url;
 }
